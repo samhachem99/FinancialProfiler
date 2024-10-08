@@ -3,7 +3,7 @@ import enum
 DATE_FORMAT = "%m/%d/%Y"
 BASE_FOLDER_ADDRESS = "/Users/samhachem99/Library/Mobile Documents/com~apple~CloudDocs/Documents/Life/Financials/Records/"
 
-FILTER_OUT_STRINGS = ["AplPay", "Merchandise & Supplies-"]
+FILTER_OUT_STRINGS = ["AplPay", "Merchandise & Supplies-", "Restaurant-"]
 
 class SearchNodeElementSearchType(int, enum.Enum):
     SEARCH_NODE_ELEMENT_TYPE_EXACT_MATCH = 1,
@@ -35,6 +35,7 @@ class SearchNodeName(str, enum.Enum):
     SEARCH_NODE_NAME_ENTERTAINMENT = "Entertainment"
     SEARCH_NODE_NAME_PERSONAL = "Personal Expenses"
     SEARCH_NODE_NAME_FEES = "Fees"
+    SEARCH_NODE_NAME_MISC = "Misc"
 
     SEARCH_NODE_NAME_FOOD_TI_FOOD = "Food::TI Food"
     SEARCH_NODE_NAME_FOOD_TI_SNACKS = "Food::TI Snacks"
@@ -84,6 +85,7 @@ ti_food_node = {
         "keywords": ["TEXAS INSTRUMENTS DADALLAS TX", "AplPay TEXAS INSTRUMDALLAS TX"],
         "exceptions": []
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_DESC_BOTH,
     "total_amount": 0.0,
@@ -102,6 +104,7 @@ ti_snacks_node = {
         "keywords": ["AMERICAN FOOD N VENDI", "AMERICAN FOOD N VENDDALLAS TX"],
         "exceptions": []
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_DESC_BOTH,
     "total_amount": 0.0,
@@ -120,6 +123,7 @@ food_weekday_node = {
         "keywords": [],
         "exceptions": ["TEXAS INSTRUMENTS DADALLAS TX", "AplPay TEXAS INSTRUMDALLAS TX", "AMERICAN FOOD N VENDI"],
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_WEEKDAY,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_WEEKEDAY,
     "total_amount": 0.0,
@@ -138,6 +142,7 @@ food_weekend_node = {
         "keywords": [],
         "exceptions": ["TEXAS INSTRUMENTS DADALLAS TX", "AplPay TEXAS INSTRUMDALLAS TX", "AMERICAN FOOD N VENDI"],
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_WEEKEND,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_WEEKEND,
     "total_amount": 0.0,
@@ -156,6 +161,7 @@ groceries_costco_node = {
         "keywords": ["COSTCO WHSE"],
         "exceptions": []
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_DESC_BOTH,
     "total_amount": 0.0,
@@ -174,6 +180,7 @@ groceries_other_node = {
         "keywords": [],
         "exceptions": ["TEXAS INSTRUMENTS DADALLAS TX", "AplPay TEXAS INSTRUMDALLAS TX", "AMERICAN FOOD N VENDI", "AMERICAN FOOD N VENDDALLAS TX"]
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,
@@ -192,6 +199,7 @@ gas_node = {
         "keywords": [],
         "exceptions": [],
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,
@@ -210,6 +218,7 @@ tolls_node = {
         "keywords": ["NTTA AUTOCHARGE", "DFW AIRPORT"],
         "exceptions": [],
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_DESC_BOTH,
     "total_amount": 0.0,
@@ -228,6 +237,7 @@ fees_cc_node = {
         "keywords": ["RENEWAL MEMBERSHIP FEE"],
         "exceptions": [],
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_DESC_BOTH,
     "total_amount": 0.0,
@@ -246,6 +256,7 @@ fees_interest_node = {
         "keywords": ["PURCHASE INTEREST"],
         "exceptions": [],
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_DESC_BOTH,
     "total_amount": 0.0,
@@ -349,6 +360,10 @@ transportation_node = {
         "keywords": ["DFW AIRPORT", "UBER"],
         "exceptions": ["UBER EATS"]
     },
+    "sub": [
+        gas_node,
+        tolls_node,
+    ],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,
@@ -367,6 +382,7 @@ shopping_node = {
         "keywords": ["FABLETICS"],
         "exceptions": ["COSTCO", "KINDLE"]
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,
@@ -385,6 +401,7 @@ entertainment_node = {
         "keywords": [],
         "exceptions": []
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,
@@ -403,6 +420,7 @@ personal_node = {
         "keywords": ["GREAT CL"],
         "exceptions": []
     },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,
@@ -421,6 +439,26 @@ fees_node = {
         "keywords": ["PURCHASE INTEREST CHARGE"],
         "exceptions": []
     },
+    "sub": [],
+    "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
+    "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
+    "total_amount": 0.0,
+    "transaction_count": 0,
+    "transactions": []
+}
+
+misc_node = {
+    "node_name": SearchNodeName.SEARCH_NODE_NAME_MISC,
+    "node_type": SearchNodeType.SEARCH_NODE_TYPE_PRIMARY,
+    "category": {
+        "keywords": [],
+        "exceptions": []
+    },
+    "Description": {
+        "keywords": [],
+        "exceptions": []
+    },
+    "sub": [],
     "time_constraints": SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_BOTH,
     "expected_score": SearchNodeResultScore.SEARCH_NODE_RESULT_SCORE_CAT_BOTH,
     "total_amount": 0.0,

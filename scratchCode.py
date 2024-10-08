@@ -1,9 +1,14 @@
 import re
-from MCCA.Defines import *
+from Defines import *
 import pandas as pd
 import json
 from datetime import datetime
+import Classes
 
+
+class TransactionAnalyzer():
+    def __init__(self, transaction: pd.Series):
+        self.transaction = transaction
 
 def compare_strings(string1, string2, how: int):
     return re.search(re.compile(string2.lower()), string1.lower()) != None
@@ -68,12 +73,33 @@ def processTransactionWithNode(transaction, node):
 
     return overallScore
 
-def buildTransactionsProfile(df: pd.DataFrame):
-    credit_transactions = df.loc[df["Amount"] > 0.0]
-    transactionList = []
+def getSecondaryNodeProfile(transaction: pd.Series, node):
+    if len(node["sub"]) == 0:
+        return None
 
-    for idx, transaction in credit_transactions.iterrows():
-        scoreList = [processTransactionWithNode(transaction, node) for node in categoryNodes]
+    scoreList = pd.Series([processTransactionWithNode(transaction, node) for node in node["sub"]])
+
+    return None if scoreList.max() == 0 else node["sub"][scoreList.idxmax()]
+
+def buildTransactionsProfile(df: pd.DataFrame):
+    transactionClassifier = []
+
+    for idx, transaction in df.iterrows():
+        scoreList = pd.Series([processTransactionWithNode(transaction, node) for node in categoryNodes])
+        maxScore = scoreList.max()
+        maxIdx = scoreList.idxmax()
+        nodeHit = None
+        secondaryNodeHitName = ""
+
+        if maxScore == 0:
+            maxIdx = -1
+            nodeHit = misc_node
+        else:
+            nodeHit = categoryNodes[maxIdx]
+
+            secondaryNodeHit = getSecondaryNodeProfile(transaction, categoryNodes[maxIdx])
+            if secondaryNodeHit != None:
+                secondaryNodeHitName = secondaryNodeHit["node_name"]
 
         transaction = {
             "idx": idx,
@@ -81,17 +107,19 @@ def buildTransactionsProfile(df: pd.DataFrame):
                 "name": transaction["Description"],
                 "category": transaction["Category"],
             },
-            "scoreList": scoreList
+            "scoreList": scoreList.tolist(),
+            "BestNode": nodeHit,
+            "BestSecondaryNode": secondaryNodeHitName,
         }
 
-        transactionList.append(transaction)
+        transactionClassifier.append(transaction)
 
     # Specify the file name
-    file_name = "{}0{}/transactionList_0{}.json".format(BASE_FOLDER_ADDRESS, month, month)
+    file_name = "transactionClassifier_0{}.json".format(month)
 
     # Save the array to the JSON file
     with open(file_name, "w") as f:
-        json.dump(transactionList, f)
+        json.dump(transactionClassifier, f)
 
 
 
@@ -110,13 +138,35 @@ if __name__ == "__main__":
     categoryInQuestion3 = "Shopping"
     descriptionInQuestion3 = "COSTCO WHSE #0664"
 
+    categoryInQuestion4 = "Restaurant-Bar & Café"
+    descriptionInQuestion4 = "AplPay IN-N-OUT DALLDALLAS TX"
+
     df = pd.read_excel("{}0{}/summary_0{}.xlsx".format(BASE_FOLDER_ADDRESS, month, month))
+    dfCreditTransactions = df.loc[df["Amount"] > 0.0]
 
-    transaction = df.loc[18]
+    dfProfile1Obj = Classes.DataFrameProfiler(dfCreditTransactions)
 
-    print(transaction)
+    dfProfile1Obj.saveProfileToFile()
 
-    print(processTransactionWithNode(transaction, food_node))
-    print(processTransactionWithNode(transaction, ti_food_node))
-    print(processTransactionWithNode(transaction, food_weekday_node))
-    print(processTransactionWithNode(transaction, food_weekend_node))
+
+    # transaction = df.loc[16]
+
+    # transactionProfile = Classes.TransactionAnalyzer(transaction)
+
+    # transactionProfile.buildTransactionProfile()
+
+    # print(str(transactionProfile))
+
+    # print(transaction.index.)
+
+    # print(transaction)
+
+    # print(processTransactionWithNode(transaction, food_node))
+    # print(processTransactionWithNode(transaction, ti_food_node))
+    # print(processTransactionWithNode(transaction, food_weekday_node))
+    # print(processTransactionWithNode(transaction, food_weekend_node))
+
+    # buildTransactionsProfile(dfCreditTransactions)
+
+    # print(getSecondaryNodeProfile(transaction, food_node))
+    # print(getSecondaryNodeProfile(transaction, transportation_node))
