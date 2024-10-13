@@ -187,7 +187,7 @@ class TransactionAnalyzer:
 
         if  (node["time_constraints"] == SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_WEEKDAY and \
                 not self.isTransactionWeekday()) or \
-            (node["time_constraints"] == SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_WEEKDAY and \
+            (node["time_constraints"] == SearchNodeDateConstraint.SEARCH_NODE_DATE_CONSTRAINT_WEEKEND and \
                 self.isTransactionWeekday()):
                 return overallScore
 
@@ -227,6 +227,14 @@ class TransactionAnalyzer:
             nodeHit = categoryNodes[maxIdx]
             secondaryNodeHit = self.getSecondaryNodeProfile(categoryNodes[maxIdx])
 
+        if nodeHit != None:
+            nodeHit["total_amount"] += self.transaction["Amount"]
+            nodeHit["transaction_count"] += 1
+
+        if secondaryNodeHit != None:
+            secondaryNodeHit["total_amount"] += self.transaction["Amount"]
+            secondaryNodeHit["transaction_count"] += 1
+
         transactionProfile = {
             "dfTransactionInfo": {
                 "name": self.transaction["Description"],
@@ -253,6 +261,7 @@ class DataFrameProfiler():
         self.isProfileComplete = False
         DataFrameProfiler.objectCounter += 1
         self.fileName = "dataFrameProfile_{}.json".format(DataFrameProfiler.objectCounter)
+        self.excelFileName = "profileReport_{}.xlsx".format(DataFrameProfiler.objectCounter)
 
     def processDataFrame(self):
         self.dataFrameProfile = [TransactionAnalyzer(transaction).getTransactionProfile() for idx, transaction in self.dataFrame.iterrows()]
@@ -264,6 +273,30 @@ class DataFrameProfiler():
             self.processDataFrame()
 
         return self.dataFrameProfile
+
+    def createProfileReport(self):
+        excelList = []
+
+        for node in categoryNodes:
+            excelList.append({
+                "Node Name": node["node_name"].value,
+                "Node Type": node["node_type"].value,
+                "Node Total Amount": node["total_amount"],
+                "Node Transaction Count": node["transaction_count"],
+            })
+
+            for subNode in node["sub"]:
+                excelList.append({
+                    "Node Name": subNode["node_name"].value,
+                    "Node Type": subNode["node_type"].value,
+                    "Node Total Amount": subNode["total_amount"],
+                    "Node Transaction Count": subNode["transaction_count"],
+                })
+
+        excelDF = pd.DataFrame(excelList, columns=["Node Name", "Node Type", "Node Total Amount", "Node Transaction Count"])
+
+        with pd.ExcelWriter(self.excelFileName) as writer:
+            excelDF.to_excel(writer)
 
     def saveProfileToFile(self):
         if not self.isProfileComplete:

@@ -148,25 +148,4 @@ if __name__ == "__main__":
 
     dfProfile1Obj.saveProfileToFile()
 
-
-    # transaction = df.loc[16]
-
-    # transactionProfile = Classes.TransactionAnalyzer(transaction)
-
-    # transactionProfile.buildTransactionProfile()
-
-    # print(str(transactionProfile))
-
-    # print(transaction.index.)
-
-    # print(transaction)
-
-    # print(processTransactionWithNode(transaction, food_node))
-    # print(processTransactionWithNode(transaction, ti_food_node))
-    # print(processTransactionWithNode(transaction, food_weekday_node))
-    # print(processTransactionWithNode(transaction, food_weekend_node))
-
-    # buildTransactionsProfile(dfCreditTransactions)
-
-    # print(getSecondaryNodeProfile(transaction, food_node))
-    # print(getSecondaryNodeProfile(transaction, transportation_node))
+    dfProfile1Obj.createProfileReport()
