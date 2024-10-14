@@ -292,7 +292,7 @@ subscriptions_node = {
         "exceptions": []
     },
     "Description": {
-        "keywords": ["Amazon Prime", "BARRON"],
+        "keywords": ["Amazon Prime", "BARRON"], # "BARRON"
         "exceptions": []
     },
     "sub": [],

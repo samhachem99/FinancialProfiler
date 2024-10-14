@@ -275,9 +275,23 @@ class DataFrameProfiler():
         return self.dataFrameProfile
 
     def createProfileReport(self):
+        totalAmountScanned = sum(self.dataFrame["Amount"])
+        totalAmountProcessed = 0.0
+        totalTransactionCountScanned = len(self.dataFrame["Amount"])
+        totalTransactionCountProcessed = 0
         excelList = []
 
+        excelList.append({
+            "Node Name": "Scanned",
+            "Node Type": "N/A",
+            "Node Total Amount": totalAmountScanned,
+            "Node Transaction Count": totalTransactionCountScanned,
+        })
+
         for node in categoryNodes:
+            totalAmountProcessed += node["total_amount"]
+            totalTransactionCountProcessed += node["transaction_count"]
+
             excelList.append({
                 "Node Name": node["node_name"].value,
                 "Node Type": node["node_type"].value,
@@ -292,6 +306,21 @@ class DataFrameProfiler():
                     "Node Total Amount": subNode["total_amount"],
                     "Node Transaction Count": subNode["transaction_count"],
                 })
+
+        excelList.append({
+            "Node Name": misc_node["node_name"].value,
+            "Node Type": misc_node["node_type"].value,
+            "Node Total Amount": misc_node["total_amount"],
+            "Node Transaction Count": misc_node["transaction_count"],
+        })
+
+        excelList.insert(1,
+            {
+                "Node Name": "Processed",
+                "Node Type": "N/A",
+                "Node Total Amount": totalAmountProcessed,
+                "Node Transaction Count": totalTransactionCountProcessed,
+            })
 
         excelDF = pd.DataFrame(excelList, columns=["Node Name", "Node Type", "Node Total Amount", "Node Transaction Count"])
 
@@ -312,3 +341,4 @@ class DataFrameProfiler():
 class FinancialProfiler():
     def __init__(self):
         self.mainNodes = []
+
