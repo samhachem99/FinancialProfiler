@@ -1,0 +1,6 @@
+pandas
+matplotlib
+datetime
+argparse
+openpyxl
+dateutil

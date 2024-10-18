@@ -3,7 +3,7 @@ from Defines import *
 import pandas as pd
 import json
 from datetime import datetime
-import Classes
+from Classes import *
 
 if __name__ == "__main__":
     month = 8
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     df = pd.read_excel("{}0{}/summary_0{}.xlsx".format(BASE_FOLDER_ADDRESS, month, month))
     dfCreditTransactions = df.loc[df["Amount"] > 0.0]
 
-    dfProfile1Obj = Classes.DataFrameProfiler(dfCreditTransactions)
+    dfProfile1Obj = DataFrameProfiler(dfCreditTransactions)
 
     dfProfile1Obj.saveProfileToFile()
 

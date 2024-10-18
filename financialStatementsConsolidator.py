@@ -1,11 +1,8 @@
-import json
-import operator
 import argparse
 import pandas as pd
 import enum
 import os
-from datetime import datetime
-from matplotlib import *
+from dateutil import parser
 
 class BankType(enum.Enum):
     BANK_TYPE_AMEX = "amex"
@@ -27,7 +24,7 @@ class AmexFileCol(enum.Enum):
         return str(self.value)
 
 class DiscoverFileCol(enum.Enum):
-    DISCOVER_FILE_COL_DATE = "Trans. date"
+    DISCOVER_FILE_COL_DATE = "Post date"
     DISCOVER_FILE_COL_DESC = "Description"
     DISCOVER_FILE_COL_AMOUNT = "Amount"
     DISCOVER_FILE_COL_CAT = "Category"

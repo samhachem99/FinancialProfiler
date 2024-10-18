@@ -1,7 +1,5 @@
 import json
-import argparse
 import pandas as pd
-import math
 from datetime import datetime
 from matplotlib import *
 import re

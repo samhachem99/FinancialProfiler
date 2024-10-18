@@ -1,5 +1,6 @@
 import enum
 
+DISCOVER_DATE_FORMAT = ""
 DATE_FORMAT = "%m/%d/%Y"
 BASE_FOLDER_ADDRESS = "/Users/samhachem99/Library/Mobile Documents/com~apple~CloudDocs/Documents/Life/Financials/Records/"
 
